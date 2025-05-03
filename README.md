@@ -35,10 +35,10 @@ Usage:
 
 Примеры запросов к API, запись данных в Kafka:
 
-> ![NOTE]: перед тем как записывать в `topic`, нужно его создать и прописать настройки в `kafka-ui`
+> ![NOTE]
+> Перед тем как записывать в `topic`, нужно его создать и прописать настройки в `kafka-ui`
 
 - POST `/kafka/topic/{topic_name}` - Запись в topic
-
 
 request:
 
@@ -61,7 +61,8 @@ response:
 
 ## Использование Consumer
 
-> [NOTE]: в разработке
+> [!NOTE]
+> В разработке
 
 - проблема в `Local: No offset stored`
 - `ReadBatchAsync` возникли проблемы в фиксации offset
