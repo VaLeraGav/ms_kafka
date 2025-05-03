@@ -35,7 +35,7 @@ Usage:
 
 Примеры запросов к API, запись данных в Kafka:
 
-> ![NOTE]
+> [!IMPORTANT]
 > Перед тем как записывать в `topic`, нужно его создать и прописать настройки в `kafka-ui`
 
 - POST `/kafka/topic/{topic_name}` - Запись в topic
