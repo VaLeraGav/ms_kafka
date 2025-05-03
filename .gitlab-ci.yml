@@ -1,0 +1,31 @@
+stages:
+  - build
+  - lint
+  - test
+
+build:
+  stage: build
+  script:
+    - ls -la
+    - go mod init github.com/VaLeraGav/ms_kafka
+    - go mod tidy
+    - go build -v ./...
+  cache:
+    paths:
+      - cache/
+
+lint:
+  stage: lint
+  before_script:
+    - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+  script:
+    - go mod init github.com/VaLeraGav/ms_kafka
+    - go mod tidy
+    - golangci-lint run
+
+test:
+  stage: test
+  script:
+    - go mod init github.com/VaLeraGav/ms_kafka
+    - go mod tidy
+    - go test -v ./...

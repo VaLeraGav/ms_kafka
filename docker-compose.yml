@@ -1,0 +1,86 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.7.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_INIT_LIMIT: 3
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - kafka-net
+
+  kafka1:
+    image: confluentinc/cp-server:7.7.1
+    hostname: kafka1
+    container_name: kafka1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9091:9091"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:29091,PLAINTEXT_HOST://localhost:9091
+      KAFKA_LOG_RETENTION_BYTES: 32212254720 # 30 ГБ
+      KAFKA_LOG_CLEANUP_POLICY: delete
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824 # 1 ГБ
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ms_kafka1_data:/var/lib/kafka/data
+    networks:
+      - kafka-net
+
+  kafka2:
+    image: confluentinc/cp-server:7.7.1
+    hostname: kafka2
+    container_name: kafka2
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LOG_RETENTION_BYTES: 32212254720 # 30 ГБ
+      KAFKA_LOG_CLEANUP_POLICY: delete
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824 # 1 ГБ
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ms_kafka2_data:/var/lib/kafka/data
+    networks:
+      - kafka-net
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 9020:8080
+    environment:
+      AUTH_TYPE: "LOGIN_FORM"
+      SPRING_SECURITY_USER_NAME: ${KAGKA_ADMIN_NAME}
+      SPRING_SECURITY_USER_PASSWORD: ${KAGKA_ADMIN_PASSWORD}
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:29091,kafka2:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    depends_on:
+      - kafka1
+      - kafka2
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    driver: bridge
+
+volumes:
+  zookeeper-data:
+  ms_kafka1_data:
+  ms_kafka2_data:

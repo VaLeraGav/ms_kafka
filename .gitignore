@@ -1,0 +1,10 @@
+.DS_Store
+.idea
+.vscode
+.env
+
+# УДАЛИТЬ из prodaction
+.env
+build/ci/*
+build/package/*
+logs/*

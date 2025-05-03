@@ -1,0 +1,15 @@
+[Unit]
+Description=ms_kafka service
+After=network.target
+
+[Service]
+User=root
+ExecStart=EXEC_START
+Restart=always
+RestartSec=10
+Environment="PROJECT_PATH=PWD"
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
