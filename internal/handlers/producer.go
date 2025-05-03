@@ -40,17 +40,11 @@ func Producer(log *zerolog.Logger, producer *kafka.Producer) http.HandlerFunc {
 			return
 		}
 
-		// topicBody, err = os.ReadFile("/mnt/c/Users/gavrin.v/Desktop/Kafka/ЦеныССоглашением.json")
-		// if err != nil {
-		// 	log.Error().Err(err).Msg("failed to Marshal object")
-		// 	return
-		// }
-
 		var objects ObjectList
 		err = jsoniter.Unmarshal(topicBody, &objects)
 		if err != nil {
 			log.Error().Err(err).Msg("failed to Unmarshal object")
-			ErrorHandle(w, r, http.StatusInternalServerError, errors.New("oшибка при обработке входных данных"))
+			ErrorHandle(w, r, http.StatusInternalServerError, errors.New("error in processing input data"))
 			return
 		}
 

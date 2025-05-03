@@ -21,6 +21,7 @@ git clone https://github.com/VaLeraGav/ms_kafka.git
 ## Команды
 
 ```
+make help
 Usage:
   help           print this help message
   init-p         used to initialize the Go project, tidy, docker, migration, build and deploy
@@ -37,3 +38,23 @@ Usage:
 > ![NOTE]: перед тем как записывать в `topic`, нужно его создать и прописать настройки в `kafka-ui`
 
 - POST `/kafka/topic/{topic_name}` - Запись в topic
+
+
+request:
+
+```json
+[
+    {
+        "key": "value"
+    }
+]
+```
+
+response:
+
+```json
+{
+    "status": "success",
+	  "message": "{topic_name}"
+}
+```
