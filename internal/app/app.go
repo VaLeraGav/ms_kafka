@@ -43,11 +43,14 @@ func RunConsumer(topic, consumerGroup string, configs *Config, projectPath strin
 		logger.Fatal().Err(err)
 	}
 
+	batchSize := 20
+	maxConcurrentBatches := 2
+
 	go func() {
-		c1.ReadBatchAsync(context.Background(), 20, 2)
+		c1.ReadBatchAsync(context.Background(), batchSize, maxConcurrentBatches)
 	}()
 	go func() {
-		c2.ReadBatchAsync(context.Background(), 20, 2)
+		c2.ReadBatchAsync(context.Background(), batchSize, maxConcurrentBatches)
 	}()
 
 	GracefulShutdown(

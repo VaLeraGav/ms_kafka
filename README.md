@@ -31,9 +31,9 @@ Usage:
   start-c        build start of ms_kafka_consumer
 ```
 
-## Использование
+## Использование Producer
 
-Примеры запросов к API и описание конечных точек:
+Примеры запросов к API, запись данных в Kafka:
 
 > ![NOTE]: перед тем как записывать в `topic`, нужно его создать и прописать настройки в `kafka-ui`
 
@@ -55,6 +55,36 @@ response:
 ```json
 {
     "status": "success",
-	  "message": "{topic_name}"
+    "message": "{topic_name}"
 }
+```
+
+## Использование Consumer
+
+> [NOTE]: в разработке
+
+- проблема в `Local: No offset stored`
+- `ReadBatchAsync` возникли проблемы в фиксации offset
+
+```go
+h := handlers.NewConsumerHandler(logger)
+c1, err := kafka.NewConsumer(logger, h, configs.Kafka.Address, topic, consumerGroup, 1)
+if err != nil {
+  logger.Fatal().Err(err)
+}
+
+c2, err := kafka.NewConsumer(logger, h, configs.Kafka.Address, topic, consumerGroup, 2)
+if err != nil {
+  logger.Fatal().Err(err)
+}
+
+batchSize := 20
+maxConcurrentBatches := 2
+
+go func() {
+  c1.ReadBatchAsync(context.Background(), batchSize, maxConcurrentBatches)
+}()
+go func() {
+  c2.ReadBatchAsync(context.Background(), batchSize, maxConcurrentBatches)
+}()
 ```
